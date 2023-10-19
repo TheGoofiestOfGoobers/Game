@@ -46,12 +46,16 @@ public class PlayerMovementController : MonoBehaviour
            
         }
 
-        Debug.Log(rb.velocity.x);
+        //Debug.Log(rb.velocity.x);
 
-        if (rb.velocity.x > 0 || rb.velocity.x < 0)
+        if (rb.velocity.x > 0  )
         {
             animator.SetBool("IsWalk", true);
         } 
+        else if (rb.velocity.x < 0)
+        {
+            animator.SetBool("IsWalk", true);
+        }
         else
         {
             animator.SetBool("IsWalk", false);

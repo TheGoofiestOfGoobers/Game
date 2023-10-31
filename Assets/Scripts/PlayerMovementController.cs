@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class PlayerMovementController : MonoBehaviour
 {
@@ -12,16 +11,18 @@ public class PlayerMovementController : MonoBehaviour
     private bool isFacingRight = true;     // Flag to track the direction the player is facing.
     private bool isJumping = false;
 
-    public Animator animator;
-
-    //public Animator animator;              // Refernce for the character animations
+    public Animator animator;              // Refernce for the character animations
+    private float originalXPosition;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();                  // Get the Rigidbody2D component of the player.
         groundCheck = transform.Find("GroundCheck");       // Find the ground check position.
         groundLayer = LayerMask.GetMask("Ground");          // Set the ground layer (change to your ground layer name).
-        rb.freezeRotation = true;                           // Lock the character's rotation.
+        rb.freezeRotation = true; // Lock the character's rotation.
+
+        originalXPosition = transform.position.x; // Store the original X position.
+                                                  
     }
 
     private void Update()
@@ -38,31 +39,15 @@ public class PlayerMovementController : MonoBehaviour
         if (isJumping)
         {
             // Play jump animation
-            //animator.SetBool("isJumping", true); // Assuming you have a "isJumping" parameter in your Animator controller.
+            animator.SetBool("isJumping", true); // Assuming you have a "isJumping" parameter in your Animator controller.
         }
         else
         {
             // Play walk animation
-           
+            animator.SetBool("isJumping", false);
         }
 
-        //Debug.Log(rb.velocity.x);
-
-        if (rb.velocity.x > 0  )
-        {
-            animator.SetBool("IsWalk", true);
-        } 
-        else if (rb.velocity.x < 0)
-        {
-            animator.SetBool("IsWalk", true);
-        }
-        else
-        {
-            animator.SetBool("IsWalk", false);
-
-        }
-
-        //animator.SetFloat("speed", Mathf.Abs(rb.velocity.x)); // Set the speed variable to the velocity of the player
+        animator.SetFloat("speed", Mathf.Abs(rb.velocity.x)); // Set the speed variable to the velocity of the player
 
 
 
@@ -97,5 +82,10 @@ public class PlayerMovementController : MonoBehaviour
         Vector3 scale = transform.localScale;       // Get the current local scale.
         scale.x *= -1;                             // Invert the X scale to flip horizontally.
         transform.localScale = scale;               // Apply the new local scale to flip the character.
+
+        // Store and reset the character's original X position
+        Vector3 position = transform.position;
+        position.x = originalXPosition;
+        transform.position = position;
     }
 }
